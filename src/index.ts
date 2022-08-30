@@ -1,15 +1,30 @@
 import express from "express";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+
+import { rest } from "./rest";
+import bodyParser from 'body-parser';
 
 dotenv.config();
-
 const app = express();
 const port = process.env.PORT;
 
-// app.get('/', (req, res) => {
-//   res.send('Express + TypeScript Server');
-// });
+app.use(bodyParser.json());
+
+try {
+  const database = process.env.DATABASE.replace(
+    "<PASSWORD>",
+    process.env.DATABASE_PASSWORD
+  );
+  mongoose.connect(database);
+} catch (error) {
+  console.log(
+    "ERROR: Verify that you have a correct db and password string in your config.env file"
+  );
+}
+
+rest(app);
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at https://localhost:${port}`);
+  console.log(`[server]: Server is running at http://localhost:${port}/`);
 });
