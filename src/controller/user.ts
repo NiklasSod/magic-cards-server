@@ -9,17 +9,21 @@ exports.register_user = async (
   password: string,
   callback: any
 ) => {
+  if (!firstName || !lastName || !email || !password) {
+    return callback("need to fill in all forms");
+  }
+  if (firstName.length < 2 || firstName.length > 60) {
+    return callback("First name length should be between 2 and 60 characters long");
+  };
+  if (lastName.length < 2 || lastName.length > 60) {
+    return callback("Last name length should be between 2 and 60 characters long");
+  };
   if (email.length < 3 || email.length > 60) {
-    callback(false, "Name length should be between 3 and 60 characters long");
-    return;
-  }
+    return callback("Email length should be between 3 and 60 characters long");
+  };
   if (password.length < 5 || password.length > 60) {
-    callback(
-      false,
-      "Password length should be between 5 and 60 characters long"
-    );
-    return;
-  }
+    return callback("Password length should be between 5 and 60 characters long");
+  };
 
   // create new user
   try {
@@ -31,9 +35,9 @@ exports.register_user = async (
     });
     // hash and salt password before adding to db
     await newUser.save();
-    callback(false, newUser.name);
+    return callback("Success, welcome " + newUser.firstName + " " + newUser.lastName);
   } catch (error) {
     console.log(error);
-    callback(false, "Something went wrong");
-  }
+    return callback("Something went wrong");
+  };
 };

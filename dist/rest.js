@@ -10,13 +10,14 @@ const rest = (app) => {
         res.send({ message: name });
     });
     app.post("/register", (req, res) => {
-        console.log(req.body);
-        user.register_user(req.body.firstName, req.body.lastName, req.body.email, req.body.password, (err) => {
+        const { firstName, lastName, email, password } = req.body;
+        user.register_user(firstName, lastName, email, password, (err) => {
             if (err) {
                 console.error(err);
-                return res.status(500).send(err);
+                return res.status(500).json(err);
             }
-            return res.status(200).json({ user });
+            ;
+            return res.status(200).json({ message: err });
         });
     });
 };
