@@ -11,6 +11,8 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(bodyParser.json());
+
+// add cors rules(?)
 app.use(cors());
 
 try {
