@@ -13,19 +13,19 @@ const User = require("../model/userModel");
 // import jwt from 'jsonwebtoken';
 exports.register_user = (firstName, lastName, email, password, callback) => __awaiter(void 0, void 0, void 0, function* () {
     if (!firstName || !lastName || !email || !password) {
-        return callback("need to fill in all forms");
+        return callback("400: need to fill in all forms");
     }
     if (firstName.length < 2 || firstName.length > 60) {
-        return callback("First name length should be between 2 and 60 characters long");
+        return callback("400: First name length should be between 2 and 60 characters long");
     }
     if (lastName.length < 2 || lastName.length > 60) {
-        return callback("Last name length should be between 2 and 60 characters long");
+        return callback("400: Last name length should be between 2 and 60 characters long");
     }
     if (email.length < 3 || email.length > 60) {
-        return callback("Email length should be between 3 and 60 characters long");
+        return callback("400: Email length should be between 3 and 60 characters long");
     }
     if (password.length < 5 || password.length > 60) {
-        return callback("Password length should be between 5 and 60 characters long");
+        return callback("400: Password length should be between 5 and 60 characters long");
     }
     // create new user
     try {
