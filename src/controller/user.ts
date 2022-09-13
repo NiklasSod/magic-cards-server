@@ -46,6 +46,6 @@ exports.register_user = async (
     );
   } catch (error) {
     console.log(error);
-    return callback("Something went wrong");
+    return callback("400: Something went wrong");
   }
 };

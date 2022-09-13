@@ -41,7 +41,7 @@ exports.register_user = (firstName, lastName, email, password, callback) => __aw
     }
     catch (error) {
         console.log(error);
-        return callback("Something went wrong");
+        return callback("400: Something went wrong");
     }
 });
 //# sourceMappingURL=user.js.map
