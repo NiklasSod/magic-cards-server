@@ -9,10 +9,12 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const rest_1 = require("./rest");
 const body_parser_1 = __importDefault(require("body-parser"));
+const helmet_1 = __importDefault(require("helmet"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
 app.use(body_parser_1.default.json());
+app.use((0, helmet_1.default)());
 // add cors rules(?)
 app.use((0, cors_1.default)());
 try {

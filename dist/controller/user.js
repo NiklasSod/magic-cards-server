@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const User = require("../model/userModel");
-// import jwt from 'jsonwebtoken';
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 exports.register_user = (firstName, lastName, email, password, callback) => __awaiter(void 0, void 0, void 0, function* () {
     if (!firstName || !lastName || !email || !password) {
         return callback("400: need to fill in all forms");
@@ -42,6 +46,37 @@ exports.register_user = (firstName, lastName, email, password, callback) => __aw
     catch (error) {
         console.log(error);
         return callback("400: Something went wrong");
+    }
+});
+exports.login_user = (email, password, callback) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield User.findOne({ email });
+        if (!user) {
+            callback(false);
+            return;
+        }
+        if (yield bcrypt_1.default.compare(password, user.password)) {
+            if (user.isAdmin === true) {
+                const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, {
+                    expiresIn: "24h",
+                });
+                user.password = undefined;
+                callback(false, { token, user });
+            }
+            else {
+                callback(false);
+                return;
+            }
+        }
+        else {
+            callback(false);
+            return;
+        }
+    }
+    catch (error) {
+        console.log(error);
+        console.log("ERROR: Verify that you have a correct jwt_secret in your config.env file");
+        callback(false);
     }
 });
 //# sourceMappingURL=user.js.map
