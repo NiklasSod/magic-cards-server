@@ -33,15 +33,15 @@ export const rest = (app: any) => {
 
   app.post("/login", (req: Request, res: Response) => {
     const { email, password } = req.body;
-    user.register_user(email, password, (result: string, error: string) => {
+    user.login_user(email, password, (result: string, error: string) => {
       if (error) {
         console.error(error);
         return res.status(500).json(error);
       }
-      if (result.includes("400")) {
-        const errResult = result.split("400: ")[1];
-        return res.status(400).json({ message: errResult });
-      }
+      // if (result.includes("400")) {
+      //   const errResult = result.split("400: ")[1];
+      //   return res.status(400).json({ message: errResult });
+      // }
       return res.status(200).json({ message: result });
     });
   });

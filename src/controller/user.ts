@@ -62,7 +62,7 @@ exports.login_user = async (email: string, password: string, callback: any) => {
     if (await bcrypt.compare(password, user.password)) {
       if (user.isAdmin === true) {
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-          expiresIn: "24h",
+          expiresIn: process.env.JWT_EXPIRATION_TIME,
         });
         user.password = undefined;
         callback(false, { token, user });

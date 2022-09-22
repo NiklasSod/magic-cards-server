@@ -58,7 +58,7 @@ exports.login_user = (email, password, callback) => __awaiter(void 0, void 0, vo
         if (yield bcrypt_1.default.compare(password, user.password)) {
             if (user.isAdmin === true) {
                 const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, {
-                    expiresIn: "24h",
+                    expiresIn: process.env.JWT_EXPIRATION_TIME,
                 });
                 user.password = undefined;
                 callback(false, { token, user });
