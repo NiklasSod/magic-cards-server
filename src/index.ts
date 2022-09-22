@@ -4,13 +4,15 @@ import mongoose from "mongoose";
 import cors from "cors";
 
 import { rest } from "./rest";
-import bodyParser from 'body-parser';
+import bodyParser from "body-parser";
+import helmet from "helmet";
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
 app.use(bodyParser.json());
+app.use(helmet());
 
 // add cors rules(?)
 app.use(cors());
