@@ -33,6 +33,10 @@ export const rest = (app: any) => {
         console.error(error);
         return res.status(500).json(error);
       };
+      if (typeof(result) !== "object" && result.includes("400")) {
+        const errResult = result.split("400: ")[1];
+        return res.status(400).json({ message: errResult });
+      };
       return res.status(200).json({ message: result });
     });
   });

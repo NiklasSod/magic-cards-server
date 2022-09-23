@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.rest = void 0;
 // import card from './controller/card';
 const user = require("./controller/user");
-// temp fix any
 const rest = (app) => {
     app.post("/register", (req, res) => {
         const { firstName, lastName, email, password } = req.body;
@@ -26,10 +25,12 @@ const rest = (app) => {
                 console.error(error);
                 return res.status(500).json(error);
             }
-            // if (result.includes("400")) {
-            //   const errResult = result.split("400: ")[1];
-            //   return res.status(400).json({ message: errResult });
-            // }
+            ;
+            if (typeof (result) !== "object" && result.includes("400")) {
+                const errResult = result.split("400: ")[1];
+                return res.status(400).json({ message: errResult });
+            }
+            ;
             return res.status(200).json({ message: result });
         });
     });

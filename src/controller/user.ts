@@ -53,11 +53,23 @@ exports.register_user = async (
 };
 
 exports.login_user = async (email: string, password: string, callback: any) => {
+  if (!email || !password) {
+    return callback("400: need to fill in all forms");
+  };
+  if (email.length < 3 || email.length > 60) {
+    return callback(
+      "400: Email length should be between 3 and 60 characters long"
+    );
+  };
+  if (password.length < 5 || password.length > 60) {
+    return callback(
+      "400: Password length should be between 5 and 60 characters long"
+    );
+  };
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      callback("Wrong email or password");
-      return;
+      return callback("400: Wrong email or password");
     }
     if (await bcrypt.compare(password, user.password)) {
       if (user.isAdmin === true) {
@@ -65,20 +77,18 @@ exports.login_user = async (email: string, password: string, callback: any) => {
           expiresIn: process.env.JWT_EXPIRATION_TIME,
         });
         user.password = undefined;
-        callback(true, { token, user });
+        return callback({ token, user });
       } else {
-        callback("Authentication fail");
-        return;
+        return callback("400: Authentication fail");
       };
     } else {
-      callback("Wrong email or password");
-      return;
+      return callback("400: Wrong email or password");
     };
   } catch (error) {
     console.log(error);
     console.log(
       "ERROR: Verify that you have a correct jwt_secret in your config.env file"
     );
-    callback(false);
+    return callback(false);
   };
 };
