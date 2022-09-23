@@ -56,7 +56,7 @@ exports.login_user = async (email: string, password: string, callback: any) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      callback(false);
+      callback("Wrong email or password");
       return;
     }
     if (await bcrypt.compare(password, user.password)) {
@@ -65,21 +65,20 @@ exports.login_user = async (email: string, password: string, callback: any) => {
           expiresIn: process.env.JWT_EXPIRATION_TIME,
         });
         user.password = undefined;
-        callback(false, { token, user });
+        callback(true, { token, user });
       } else {
-        callback(false);
+        callback("Authentication fail");
         return;
-      }
+      };
     } else {
-      callback(false);
+      callback("Wrong email or password");
       return;
-    }
+    };
   } catch (error) {
     console.log(error);
     console.log(
       "ERROR: Verify that you have a correct jwt_secret in your config.env file"
     );
-
     callback(false);
-  }
+  };
 };
