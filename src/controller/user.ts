@@ -73,13 +73,17 @@ exports.login_user = async (email: string, password: string, callback: any) => {
     }
     if (await bcrypt.compare(password, user.password)) {
       if (user.isAdmin === true) {
+        const adminToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_ADMIN, {
+          expiresIn: process.env.JWT_EXPIRATION_TIME,
+        });
+        user.password = undefined;
+        return callback({ adminToken, user });
+      } else {
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRATION_TIME,
         });
         user.password = undefined;
         return callback({ token, user });
-      } else {
-        return callback("400: Authentication fail");
       };
     } else {
       return callback("400: Wrong email or password");
