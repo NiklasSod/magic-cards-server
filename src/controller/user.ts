@@ -76,8 +76,11 @@ exports.login_user = async (email: string, password: string, callback: any) => {
         const adminToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_ADMIN, {
           expiresIn: process.env.JWT_EXPIRATION_TIME,
         });
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRATION_TIME,
+        });
         user.password = undefined;
-        return callback({ adminToken, user });
+        return callback({ adminToken, token, user });
       } else {
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRATION_TIME,

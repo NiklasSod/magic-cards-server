@@ -1,10 +1,49 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rest = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // import card from './controller/card';
 const user = require("./controller/user");
+// check for authorization token
+function auth(req, res, next) {
+    const token = req.headers.token;
+    const adminToken = req.headers.adminToken;
+    console.log("test1");
+    if (!token || !adminToken) {
+        console.log("test2");
+        return;
+        // return status(401).json({ message: "Unauthorized, sign in required." });
+    }
+    jsonwebtoken_1.default.verify(token.toString(), process.env.JWT_SECRET, (err) => __awaiter(this, void 0, void 0, function* () {
+        if (err) {
+            return;
+            // return res.status(401).json({ message: "Unauthorized, invalid token." });
+        }
+        return next();
+    }));
+    jsonwebtoken_1.default.verify(adminToken.toString(), process.env.JWT_SECRET, (err) => __awaiter(this, void 0, void 0, function* () {
+        if (err) {
+            return;
+            // return res.status(401).json({ message: "Unauthorized, invalid token." });
+        }
+        return next();
+    }));
+}
+;
 const rest = (app) => {
-    app.post("/register", (req, res) => {
+    app.post("/register", auth, (req, res) => {
         const { firstName, lastName, email, password } = req.body;
         user.register_user(firstName, lastName, email, password, (result, error) => {
             if (error) {

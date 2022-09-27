@@ -1,8 +1,40 @@
 import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
 // import card from './controller/card';
 const user = require("./controller/user");
 
+/**
+ *! MIDDLEWARE
+ */
+ // check for authorization token
+function auth(req: Request, res: Response, next: NextFunction) {
+  const token = req.headers.token;
+  const adminToken = req.headers.adminToken;
+
+  if (!token || !adminToken) {
+      return;
+      // return status(401).json({ message: "Unauthorized, sign in required." });
+  }
+  jwt.verify(token.toString(), process.env.JWT_SECRET, async (err) => {
+      if (err) {
+          return;
+          // return res.status(401).json({ message: "Unauthorized, invalid token." });
+      }
+      return next();
+  });
+  jwt.verify(adminToken.toString(), process.env.JWT_SECRET_ADMIN, async (err) => {
+    if (err) {
+        return;
+        // return res.status(401).json({ message: "Unauthorized, invalid token." });
+    }
+    return next();
+});
+};
+
+/**
+ *! USER ROUTES
+ */
 export const rest = (app: any) => {
 
   app.post("/register", (req: Request, res: Response) => {

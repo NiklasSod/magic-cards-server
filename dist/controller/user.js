@@ -71,8 +71,11 @@ exports.login_user = (email, password, callback) => __awaiter(void 0, void 0, vo
                 const adminToken = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET_ADMIN, {
                     expiresIn: process.env.JWT_EXPIRATION_TIME,
                 });
+                const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, {
+                    expiresIn: process.env.JWT_EXPIRATION_TIME,
+                });
                 user.password = undefined;
-                return callback({ adminToken, user });
+                return callback({ adminToken, token, user });
             }
             else {
                 const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, {
