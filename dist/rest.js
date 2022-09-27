@@ -16,13 +16,14 @@ exports.rest = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // import card from './controller/card';
 const user = require("./controller/user");
+/**
+ * MIDDLEWARE
+ */
 // check for authorization token
 function auth(req, res, next) {
     const token = req.headers.token;
     const adminToken = req.headers.adminToken;
-    console.log("test1");
     if (!token || !adminToken) {
-        console.log("test2");
         return;
         // return status(401).json({ message: "Unauthorized, sign in required." });
     }
@@ -33,7 +34,7 @@ function auth(req, res, next) {
         }
         return next();
     }));
-    jsonwebtoken_1.default.verify(adminToken.toString(), process.env.JWT_SECRET, (err) => __awaiter(this, void 0, void 0, function* () {
+    jsonwebtoken_1.default.verify(adminToken.toString(), process.env.JWT_SECRET_ADMIN, (err) => __awaiter(this, void 0, void 0, function* () {
         if (err) {
             return;
             // return res.status(401).json({ message: "Unauthorized, invalid token." });
@@ -42,8 +43,11 @@ function auth(req, res, next) {
     }));
 }
 ;
+/**
+ * USER ROUTES
+ */
 const rest = (app) => {
-    app.post("/register", auth, (req, res) => {
+    app.post("/register", (req, res) => {
         const { firstName, lastName, email, password } = req.body;
         user.register_user(firstName, lastName, email, password, (result, error) => {
             if (error) {

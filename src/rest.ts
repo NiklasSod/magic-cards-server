@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const user = require("./controller/user");
 
 /**
- *! MIDDLEWARE
+ * MIDDLEWARE
  */
  // check for authorization token
 function auth(req: Request, res: Response, next: NextFunction) {
@@ -33,7 +33,7 @@ function auth(req: Request, res: Response, next: NextFunction) {
 };
 
 /**
- *! USER ROUTES
+ * USER ROUTES
  */
 export const rest = (app: any) => {
 
