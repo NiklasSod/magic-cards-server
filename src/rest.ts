@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { transporter } from "./node";
 
 // import card from './controller/card';
 const user = require("./controller/user");
@@ -72,4 +73,20 @@ export const rest = (app: any) => {
       return res.status(200).json({ message: result });
     });
   });
+
+  app.post("/sendMail", (req: Request, res: Response) => {
+    const mailData = {
+      from: 'youremail@gmail.com',  // sender address
+      to: 'korvAbc@gmail.com',   // list of receivers
+      subject: 'Sending Email from magic card store',
+      text: 'That was easy!',
+    };
+    transporter.sendMail(mailData, (error, info) => {
+      if (error) {
+        return console.log(error);
+      };
+      res.status(200).send({ message: "mail send", message_id: info.messageId })
+    })
+
+  })
 };

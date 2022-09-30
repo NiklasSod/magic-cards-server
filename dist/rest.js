@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rest = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const node_1 = require("./node");
 // import card from './controller/card';
 const user = require("./controller/user");
 /**
@@ -75,6 +76,21 @@ const rest = (app) => {
             }
             ;
             return res.status(200).json({ message: result });
+        });
+    });
+    app.post("/sendMail", (req, res) => {
+        const mailData = {
+            from: 'youremail@gmail.com',
+            to: 'korvAbc@gmail.com',
+            subject: 'Sending Email from magic card store',
+            text: 'That was easy!',
+        };
+        node_1.transporter.sendMail(mailData, (error, info) => {
+            if (error) {
+                return console.log(error);
+            }
+            ;
+            res.status(200).send({ message: "mail send", message_id: info.messageId });
         });
     });
 };
